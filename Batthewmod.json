@@ -1,0 +1,18 @@
+{
+	"id": "BatthewMod",
+	"name": "BatthewMod",
+	"display_name": "BatthewMod",
+	"author": [
+		"Batthew"
+	],
+	"description": "A simple mod for me to understand how to mod this game and learn lua",
+	"prefix": "BatthewMod",
+	"main_file": "main.lua",
+	"priority": -100000,
+	"badge_colour": "",
+	"badge_text_colour": "",
+	"version": "1.0.0",
+	"dependencies": [
+		"Steamodded (>=1.0.0~BETA-0301b)"
+	]
+}

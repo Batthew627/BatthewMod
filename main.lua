@@ -63,6 +63,39 @@ SMODS.Joker {
 		local bonus = card.ability.extra.money
 		if bonus > 0 then return bonus end
 	end
-	
-	-- Since there's nothing else to calculate, a calculate function is completely unnecessary.
+}
+SMODS.Joker {
+	key = 'negative_spawner',
+	loc_txt = {
+		name = 'Negative Spawner',
+		text = {
+			"Spawns a random negative joker",
+			"at the beginning of the round",
+			"and destroys it at the end"
+		}
+	},
+	rarity = 2,
+	unlocked = true,
+	discovered = true,
+	atlas = 'BMjoker',
+	pos = { x = 0, y = 0 },
+	cost = 7,
+	config = { extra = {} },
+	calculate = function(self, card, context)
+		if context.setting_blind then
+			return {
+				local created_cards = SMODS.add_card({ set = 'Joker' })
+				local joker_card = created_cards[1]
+			}
+		end
+		if context.end_of_round then
+			return  {
+				G.E_MANAGER:add_event(Event({func = function()
+					(context.blueprint_card or self):juice_up(0.8, 0.8)
+					joker_to_destroy:start_dissolve({G.C.RED}, nil, 1.6)
+				return true end }))
+			end
+			}
+		end
+	end
 }

@@ -65,11 +65,11 @@ SMODS.Joker {
 	end
 }
 SMODS.Joker {
-	key = 'negative_spawner',
+	key = 'chaos_cat',
 	loc_txt = {
-		name = 'Negative Spawner',
+		name = 'Chaos Cat',
 		text = {
-			"Spawns a random negative joker",
+			"Spawns a random joker",
 			"at the beginning of the round",
 			"and destroys it at the end"
 		}
@@ -84,18 +84,21 @@ SMODS.Joker {
 	calculate = function(self, card, context)
 		if context.setting_blind then
 			return {
-				local created_cards = SMODS.add_card({ set = 'Joker' })
-				local joker_card = created_cards[1]
+				SMODS.add_card({ set = 'Joker' })
 			}
 		end
 		if context.end_of_round then
-			return  {
-				G.E_MANAGER:add_event(Event({func = function()
-					(context.blueprint_card or self):juice_up(0.8, 0.8)
-					joker_to_destroy:start_dissolve({G.C.RED}, nil, 1.6)
-				return true end }))
-			end
-			}
+			for i = 1, G.jokers.cards do
+						local joker = G.jokers.cards[i]
+						if joker.spawned_by == self and not joker.getting_sliced then
+							joker.getting_sliced = true
+							G.E_MANAGER:add_event(Event({func = function()
+								joker:start_dissolve({G.C.RED}, nil, 1.6)
+								G.jokers:remove_card(joker)
+								return true
+							end}))
+						end
+					end
 		end
-	end
+	end	
 }

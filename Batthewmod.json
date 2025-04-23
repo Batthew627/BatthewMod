@@ -6,7 +6,7 @@
 		"Batthew"
 	],
 	"description": "A simple mod for me to understand how to mod this game and learn lua",
-	"prefix": "BatthewMod",
+	"prefix": "BM",
 	"main_file": "main.lua",
 	"priority": -100000,
 	"badge_colour": "",

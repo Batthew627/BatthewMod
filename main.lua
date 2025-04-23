@@ -84,18 +84,84 @@ SMODS.Joker {
 	calculate = function(self, card, context)
 		if context.setting_blind then
 			return {
-				local created_cards = SMODS.add_card({ set = 'Joker' })
-				local joker_card = created_cards[1]
+				SMODS.add_card({ set = 'Joker',edition = 'negative', stickers = ["disposable"]  })
 			}
 		end
-		if context.end_of_round then
-			return  {
-				G.E_MANAGER:add_event(Event({func = function()
-					(context.blueprint_card or self):juice_up(0.8, 0.8)
-					joker_to_destroy:start_dissolve({G.C.RED}, nil, 1.6)
-				return true end }))
+	end
+}
+
+SMODS.Sticker {
+
+	key = "disposable",
+	rate = 1,
+	loc_txt = {
+		label = "disposable",
+		name = "Disposable",
+		text = {
+			"{C:green}#1# in 1{} chance this",
+			"joker is destroyed",
+			"at end of round"
+		}
+	},
+	config = { extra = { odds = 6 } },
+	badge_colour = HEX('ADB200'),
+	needs_enable_flag = false,
+	
+	should_apply = function(self,card,center,area,bypass_roll)
+		local yes = SMODS.Sticker.should_apply(self,card,center,area,bypass_roll)
+		
+		if G.GAME.modifiers.enable_eternals_in_shop then
+			yes = false
+		end
+		
+		return yes
+	end,
+	
+	loc_vars = function(self, info_queue, card)
+		return { vars = {G.GAME.probabilities.normal or 1}}
+	end,
+	
+	
+	calculate = function(self, card, context)
+		
+
+		-- Checks to see if it's end of round, and if context.game_over is false.
+		-- Also, not context.repetition ensures it doesn't get called during repetitions.
+		if context.end_of_round and not context.repetition and context.game_over == false and not context.blueprint then
+			if true then
+				-- This part plays the animation.
+				G.E_MANAGER:add_event(Event({
+					func = function()
+						play_sound('tarot1')
+						card.T.r = -0.2
+						card:juice_up(0.3, 0.4)
+						card.states.drag.is = true
+						card.children.center.pinch.x = true
+						-- This part destroys the card.
+						G.E_MANAGER:add_event(Event({
+							trigger = 'after',
+							delay = 0.3,
+							blockable = false,
+							func = function()
+								G.jokers:remove_card(card)
+								card:remove()
+								card = nil
+								return true;
+							end
+						}))
+						return true
+					end
+				}))
+				-- Sets the pool flag to true, meaning Gros Michel 2 doesn't spawn, and Cavendish 2 does.
+				
+				return {
+					message = 'Extinct!'
+				}
+			else
+				return {
+					message = 'Safe!'
+				}
 			end
-			}
 		end
 	end
 }

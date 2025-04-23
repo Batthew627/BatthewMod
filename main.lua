@@ -65,11 +65,11 @@ SMODS.Joker {
 	end
 }
 SMODS.Joker {
-	key = 'negative_spawner',
+	key = 'chaos_cat',
 	loc_txt = {
-		name = 'Negative Spawner',
+		name = 'Chaos Cat',
 		text = {
-			"Spawns a random negative joker",
+			"Spawns a random joker",
 			"at the beginning of the round",
 			"and destroys it at the end"
 		}
